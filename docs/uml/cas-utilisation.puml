@@ -1,0 +1,34 @@
+@startuml cas-utilisation
+' CampusConnect — Diagramme de cas d'utilisation (fonctionnalités PRÉVUES, non développées)
+left to right direction
+skinparam packageStyle rectangle
+skinparam actorStyle awesome
+
+actor "Étudiant" as Etudiant
+actor "Organisateur" as Organisateur
+
+rectangle "CampusConnect (système envisagé)" {
+  usecase "Consulter la liste\ndes événements (US01)" as UC1
+  usecase "Rechercher / filtrer\nun événement (US02)" as UC2
+  usecase "S'inscrire à\nun événement (US03)" as UC3
+  usecase "Annuler son\ninscription (US04)" as UC4
+  usecase "Recevoir une\nnotification (US05)" as UC5
+  usecase "Créer et publier\nun événement (US06)" as UC6
+  usecase "Modifier\nun événement (US07)" as UC7
+  usecase "Consulter la liste\ndes inscrits (US08)" as UC8
+  usecase "Vérifier la capacité\nde l'événement" as UCcap
+}
+
+Etudiant --> UC1
+Etudiant --> UC2
+Etudiant --> UC3
+Etudiant --> UC4
+Etudiant --> UC5
+
+Organisateur --> UC6
+Organisateur --> UC7
+Organisateur --> UC8
+
+UC3 .> UCcap : <<include>>
+UC2 .> UC1 : <<extend>>
+@enduml
