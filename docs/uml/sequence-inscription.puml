@@ -1,0 +1,34 @@
+@startuml sequence-inscription
+' CampusConnect — Diagramme de séquence : inscription à un événement (US03 / CCG2-6)
+' Scénario PRÉVU, aucune implémentation existante.
+autonumber
+actor "Étudiant" as E
+participant "Interface\nCampusConnect" as UI
+participant "Service\nInscriptions" as S
+database "Base de\ndonnées" as DB
+
+E -> UI : Ouvre la page de détail de l'événement
+UI -> S : getEvenement(idEvenement)
+S -> DB : lire événement + nb d'inscriptions
+DB --> S : événement, nbInscrits
+S --> UI : détail (places restantes)
+UI --> E : Affiche le détail et le bouton « S'inscrire »
+
+E -> UI : Clique sur « S'inscrire »
+UI -> S : inscrire(idEtudiant, idEvenement)
+S -> DB : inscription existante ?
+DB --> S : résultat
+
+alt Inscription déjà existante
+  S --> UI : refus (DEJA_INSCRIT)
+  UI --> E : Message « Vous êtes déjà inscrit »
+else Événement complet (capacité renseignée et atteinte)
+  S --> UI : refus (COMPLET)
+  UI --> E : Message « Événement complet »
+else Inscription possible
+  S -> DB : créer Inscription (CONFIRMEE)
+  DB --> S : OK
+  S --> UI : inscription confirmée
+  UI --> E : Statut « Inscrit » + message de confirmation\nBouton « Annuler mon inscription »
+end
+@enduml
