@@ -1,0 +1,78 @@
+@startuml classes
+' CampusConnect — Diagramme de classes (modèle conceptuel envisagé)
+hide circle
+skinparam classAttributeIconSize 0
+
+abstract class Utilisateur {
+  - id : Integer
+  - nom : String
+  - prenom : String
+  - email : String
+}
+
+class Etudiant {
+  - numeroEtudiant : String
+  + consulterEvenements() : List<Evenement>
+  + sInscrire(e : Evenement) : Inscription
+  + annulerInscription(i : Inscription) : void
+}
+
+class Organisateur {
+  - association : String
+  + creerEvenement() : Evenement
+  + publier(e : Evenement) : void
+  + consulterInscrits(e : Evenement) : List<Etudiant>
+}
+
+class Evenement {
+  - id : Integer
+  - titre : String
+  - date : Date
+  - heure : Time
+  - lieu : String
+  - description : String
+  - capaciteMax : Integer [0..1]
+  - statut : StatutEvenement
+  + estComplet() : Boolean
+  + placesRestantes() : Integer
+}
+
+class Inscription {
+  - id : Integer
+  - dateInscription : DateTime
+  - statut : StatutInscription
+  + annuler() : void
+}
+
+enum StatutEvenement {
+  BROUILLON
+  PUBLIE
+  ANNULE
+}
+
+enum StatutInscription {
+  CONFIRMEE
+  ANNULEE
+}
+
+Utilisateur <|-- Etudiant
+Utilisateur <|-- Organisateur
+
+Organisateur "1" -- "0..*" Evenement : organise >
+Etudiant "1" -- "0..*" Inscription : effectue >
+Evenement "1" -- "0..*" Inscription : concerne <
+
+Evenement ..> StatutEvenement
+Inscription ..> StatutInscription
+
+note bottom of Evenement
+  capaciteMax optionnelle (décision PO, CCG2-4) :
+  si non renseignée, inscriptions illimitées.
+end note
+
+note right of Inscription
+  Règle À CONFIRMER avec le PO : un étudiant
+  ne peut avoir qu'une inscription CONFIRMEE
+  par événement (doublon, cf. CCG2-19).
+end note
+@enduml
